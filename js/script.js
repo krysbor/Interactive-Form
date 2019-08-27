@@ -29,6 +29,7 @@ $('#color').children().each((index) => {
 const updateColorField = () => {
     if (selectDesignElement.val() === 'js puns') {
         $('#color').children().eq(0).text('Cornflower Blue (JS Puns shirt only)')
+        $('#color').val('cornflowerblue')
         $('#color').children().each((index) => {
             if (index < 3) {
             $('#color').children().eq(index).show()
@@ -38,6 +39,7 @@ const updateColorField = () => {
         })
     } else {
         $('#color').children().eq(0).text('Tomato (JS shirt only)')
+        $('#color').val('tomato')
         $('#color').children().each((index) => {
             if (index > 2) {
             $('#color').children().eq(index).show()
@@ -85,6 +87,30 @@ $('.activities').on('change', (event) => {
 
     })
 activeCheckbox.removeAttr('disabled')
+})
+
+
+$('option[value="select method"]').remove()
+$('#paypal').hide()
+$('#bitcoin').hide()
+
+const selectPaymentElement = $('#payment')
+selectPaymentElement.on('change', (event) => {
+    let inputValue = $(event.target).val()
+    console.log(inputValue)
+    if (inputValue === 'Credit Card') {
+        $('#credit-card').show()
+        $('#paypal').hide()
+        $('#bitcoin').hide()
+    } else if (inputValue === 'PayPal') {
+        $('#paypal').show()
+        $('#bitcoin').hide()
+        $('#credit-card').hide()
+    } else if (inputValue === 'Bitcoin') {
+        $('#bitcoin').show()
+        $('#credit-card').hide()
+        $('#paypal').hide()
+    }
 })
 
 
