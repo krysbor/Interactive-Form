@@ -55,18 +55,36 @@ const totalCostElement = $('<p>Total cost: 0</p>')
 let totalCost = 0
 $('.activities').append(totalCostElement)
 
+/* When the user selects an option, other conflicting activities are disabled */
 $('.activities').on('change', (event) => {
     let targetElement = event.target
     let cost = parseInt($(targetElement).attr('data-cost').replace('$', ''))
-    console.log(cost)
+    let date = $(targetElement).attr('data-day-and-time')
+    let activeCheckbox = $(targetElement)
+    console.log(date)
     if ($(event.target).is(':checked')) {
         totalCost += cost
-        console.log(cost + 'added')
     } else {
         totalCost -= cost
-        console.log(cost + 'substracted')
     }
-    totalCostElement.text('Total cost: ' + totalCost)
+    totalCostElement.text('Total cost: $' + totalCost)
+
+
+    let checkboxes = $('input[type="checkbox"]')
+    checkboxes.each((index) => {
+        let currentElement = checkboxes.eq(index)
+        let eventData = currentElement.attr('data-day-and-time')
+        console.log(eventData)
+        if (eventData === date) {
+            if ($(event.target).is(':checked')) {
+                 currentElement.attr('disabled', 'true')
+                } else {
+                currentElement.removeAttr('disabled')
+            }
+        }
+
+    })
+activeCheckbox.removeAttr('disabled')
 })
 
 
