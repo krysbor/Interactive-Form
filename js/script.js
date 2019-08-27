@@ -1,7 +1,7 @@
-console.log('js connected')
 
-const namer = $('#name')
-namer.focus()
+
+const nameInput = $('#name')
+nameInput.focus()
 
 const otherJobInput = $('#other-title')
 otherJobInput.hide()
@@ -48,7 +48,25 @@ const updateColorField = () => {
     }
 }
 
-
 selectDesignElement.on('change', updateColorField)
+
+
+const totalCostElement = $('<p>Total cost: 0</p>')
+let totalCost = 0
+$('.activities').append(totalCostElement)
+
+$('.activities').on('change', (event) => {
+    let targetElement = event.target
+    let cost = parseInt($(targetElement).attr('data-cost').replace('$', ''))
+    console.log(cost)
+    if ($(event.target).is(':checked')) {
+        totalCost += cost
+        console.log(cost + 'added')
+    } else {
+        totalCost -= cost
+        console.log(cost + 'substracted')
+    }
+    totalCostElement.text('Total cost: ' + totalCost)
+})
 
 
