@@ -1,11 +1,14 @@
 
-/* sets focus on name input by default */
+/* Sets focus on name input by default */
 const nameInput = $('#name')
 nameInput.focus()
 
-/* hides input for other job option until user selects 'Other' option in 'Job Role' menu */
+/* Hides input for other job option until user selects 'Other' option in 'Job Role' menu */
 const otherJobInput = $('#other-title')
 otherJobInput.hide()
+
+/* Hides the "Color" label and select menu until a T-Shirt design is selected from the "Design" menu. */
+$('#colors-js-puns').hide()
 
 /* When user selects 'Other' job option additional text input appears */
 const selectJobElement = $('#title')
@@ -32,11 +35,12 @@ $('#color').children().each((index) => {
 const nameAlert = $('<p class="alert" id="name-alert">The name field cannot be empty</p>')
 const emailAlert = $('<p class="alert" id="email-alert">Please enter a valid email address</p>')
 const activitiesAlert = $('<p class="alert" id="activities-alert">Please select at least one activity from list</p>')
-const cardNumberAlert = $('<p class="alert" id="card-number-alert">Please enter a valid card number</p>')
+const cardNumberAlert = $('<p class="alert" id="card-number-alert">Please enter a number that is between 13 and 16 digits long.</p>')
+const cardNumberAlert2 = $('<p class="alert" id="card-number-alert2">Please enter a credit card number.</p>')
 const cardZipAlert = $('<p class="alert" id="zip-number-alert">Please enter a valid zip number</p>')
 const cardCvvAlert = $('<p class="alert" id="cvv-code-alert">Please enter a valid cvv code</p>')
 
-/* Hides all alert elements by default */
+/* Appends and hides all alert elements by default */
 $('label[for="name"]').after(nameAlert)
 nameAlert.hide()
 $('label[for="mail"]').after(emailAlert)
@@ -45,6 +49,8 @@ $('.activities').children().eq(0).before(activitiesAlert)
 activitiesAlert.hide()
 $('label[for="cc-num"]').after(cardNumberAlert)
 cardNumberAlert.hide()
+$('label[for="cc-num"]').after(cardNumberAlert2)
+cardNumberAlert2.hide()
 $('label[for="zip"]').after(cardZipAlert)
 cardZipAlert.hide()
 $('label[for="cvv"]').after(cardCvvAlert)
@@ -76,7 +82,11 @@ const updateColorField = () => {
             }
         })
     }
+    /* Shows "Color" label and select menu */
+    $('#colors-js-puns').show()
 }
+
+
 
 /* Updates the color field when the user changes the theme */
 selectDesignElement.on('change', updateColorField)
@@ -174,7 +184,7 @@ const checkboxIsChecked = () => {
 /* Uses regular expressions to check that the user has entered the correct information in the required fields
 Displays messages near the invalid fields and changes the borders color of the input elements
 */
-const validation = () => {
+const validation = (checkName=true, checkEmail=true, checkCardNumber=true, checkZipCode=true, checkCvv=true, checkboxesCheck=true) => {
     /* Stores the boolean value:
     false - if one of the conditions does not meet the requirements
     true - if all conditions meet the requirements */
@@ -203,68 +213,86 @@ const validation = () => {
     /* Stores the number of selected checkboxes */
     let checkboxesChecked = checkboxIsChecked()
 
-    if (preventEmptyRegex.test(name)) {
-        validationCompleted += 1
-        $('#name').css('border', '2px solid #6F9DDC')
-        nameAlert.hide()
-    } else {
-        $('#name').css('border', '3px solid red')
-        nameAlert.show()
+    if (checkName===true) {
+        if (preventEmptyRegex.test(name)) {
+            validationCompleted += 1
+            $('#name').css('border', '2px solid #6F9DDC')
+            nameAlert.hide()
+        } else {
+            $('#name').css('border', '3px solid red')
+            nameAlert.show()
+        }
     }
 
-    if (emailRegex.test(email) && preventEmptyRegex.test(email)) {
-        validationCompleted += 1
-        $('#mail').css('border', '2px solid #6F9DDC')
-        emailAlert.hide()
-    } else {
-        $('#mail').css('border', '3px solid red')
-        emailAlert.show()
+    if (checkEmail === true) {
+        if (emailRegex.test(email) && preventEmptyRegex.test(email)) {
+            validationCompleted += 1
+            $('#mail').css('border', '2px solid #6F9DDC')
+            emailAlert.hide()
+        } else {
+            $('#mail').css('border', '3px solid red')
+            emailAlert.show()
+        }
     }
 
     /* Checks if the user has chosen a credit card payment method, and if so, checks the values entered */
     if (creditCardPayment === true) {
-        if (cardNumberRegex.test(cardNumber) && preventEmptyRegex.test(cardNumber)) {
-            validationCompleted += 1
-            $('#cc-num').css('border', '2px solid #6F9DDC')
-            cardNumberAlert.hide()
-        } else {
-            $('#cc-num').css('border', '3px solid red')
-            cardNumberAlert.show()
+        if (checkCardNumber === true) {
+            if (cardNumberRegex.test(cardNumber) && preventEmptyRegex.test(cardNumber)) {
+                validationCompleted += 1
+                $('#cc-num').css('border', '2px solid #6F9DDC')
+                cardNumberAlert.hide()
+                cardNumberAlert2.hide()
+            } else if(!preventEmptyRegex.test(cardNumber)) {
+                $('#cc-num').css('border', '3px solid red')
+                cardNumberAlert2.show()
+                cardNumberAlert.hide()
+            } else {
+                $('#cc-num').css('border', '3px solid red')
+                cardNumberAlert.show()
+                cardNumberAlert2.hide()
+            }
         }
-        if (zipCodeRegex.test(zipCode) && preventEmptyRegex.test(zipCode)) {
-            validationCompleted += 1
-            $('#zip').css('border', '2px solid #6F9DDC')
-            cardZipAlert.hide()
-        } else {
-            $('#zip').css('border', '3px solid red')
-            cardZipAlert.show()
+        if (checkZipCode == true) {
+            if (zipCodeRegex.test(zipCode) && preventEmptyRegex.test(zipCode)) {
+                validationCompleted += 1
+                $('#zip').css('border', '2px solid #6F9DDC')
+                cardZipAlert.hide()
+            } else {
+                $('#zip').css('border', '3px solid red')
+                cardZipAlert.show()
+            }
         }
-        if (cvvRegex.test(cvv) && preventEmptyRegex.test(cvv)) {
-            validationCompleted += 1
-            $('#cvv').css('border', '2px solid #6F9DDC')
-            cardCvvAlert.hide()
-        } else {
-            $('#cvv').css('border', '3px solid red')
-            cardCvvAlert.show()
+        if (checkCvv == true) {
+            if (cvvRegex.test(cvv) && preventEmptyRegex.test(cvv)) {
+                validationCompleted += 1
+                $('#cvv').css('border', '2px solid #6F9DDC')
+                cardCvvAlert.hide()
+            } else {
+                $('#cvv').css('border', '3px solid red')
+                cardCvvAlert.show()
+            }
         }
-    } else {
-        /* Changes the requirements for full verification
-        when the user chooses a different payment method than the credit card */
-        validationSuccess = 3
+        } else {
+            /* Changes the requirements for full verification
+            when the user chooses a different payment method than the credit card */
+            validationSuccess = 3
     }
 
     /* Checks if the user has selected at least one of the ckeckbox fields */
-    if (checkboxesChecked > 0) {
-        validationCompleted += 1
-        $('.activities > legend').css('border', '')
-        activitiesAlert.hide()
-    } else {
-        $('.activities > legend').css('border', '3px solid red')
-        activitiesAlert.show()
+    if (checkboxesCheck == true) {
+        if (checkboxesChecked > 0) {
+            validationCompleted += 1
+            $('.activities > legend').css('border', '')
+            activitiesAlert.hide()
+        } else {
+            $('.activities > legend').css('border', '3px solid red')
+            activitiesAlert.show()
+        }
     }
 
 
-    /* If all conditions are met successfully, returns true */
+    /* If all conditions are met successfully, returns true otherwise returns false */
     if (validationCompleted == validationSuccess) {
         isCompleted = true
     }
@@ -274,6 +302,48 @@ const validation = () => {
 
 $('button[type="submit"]').on('click', (event) => {
     if (!validation()) {
+        /* If the validation process has not been successfully completed,
+        it prevents the form from being sent */
         event.preventDefault()
     }
+})
+
+/* Real-time validation events */
+$('#name').keyup(() => {
+    validation(checkName=true, checkEmail=false, checkCardNumber=false, checkZipCode=false, checkCvv=false, checkboxesCheck=false)
+})
+$('#name').blur(() => {
+    validation(checkName=true, checkEmail=false, checkCardNumber=false, checkZipCode=false, checkCvv=false, checkboxesCheck=false)
+})
+$('#mail').keyup((event) => {
+    if (!(event.keyCode == 9)) {  //tab pressed
+        validation(checkName=false, checkEmail=true, checkCardNumber=false, checkZipCode=false, checkCvv=false, checkboxesCheck=false)
+    }
+})
+$('#mail').blur(() => {
+    validation(checkName=false, checkEmail=true, checkCardNumber=false, checkZipCode=false, checkCvv=false, checkboxesCheck=false)
+})
+$('#cc-num').keyup((event) => {
+    if (!(event.keyCode == 9)) {  //tab pressed
+        validation(checkName=false, checkEmail=false, checkCardNumber=true, checkZipCode=false, checkCvv=false, checkboxesCheck=false)
+    }
+})
+$('#cc-num').blur(() => {
+    validation(checkName=false, checkEmail=false, checkCardNumber=true, checkZipCode=false, checkCvv=false, checkboxesCheck=false)
+})
+$('#zip').keyup((event) => {
+    if (!(event.keyCode == 9)) {  //tab pressed
+        validation(checkName=false, checkEmail=false, checkCardNumber=false, checkZipCode=true, checkCvv=false, checkboxesCheck=false)
+    }
+})
+$('#zip').blur(() => {
+    validation(checkName=false, checkEmail=false, checkCardNumber=false, checkZipCode=true, checkCvv=false, checkboxesCheck=false)
+})
+$('#cvv').keyup((event) => {
+    if (!(event.keyCode == 9)) {  //tab pressed
+        validation(checkName=false, checkEmail=false, checkCardNumber=false, checkZipCode=false, checkCvv=true, checkboxesCheck=false)
+    }
+})
+$('#cvv').blur(() => {
+    validation(checkName=false, checkEmail=false, checkCardNumber=false, checkZipCode=false, checkCvv=true, checkboxesCheck=false)
 })
