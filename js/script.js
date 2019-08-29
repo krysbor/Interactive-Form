@@ -20,7 +20,9 @@ $('#colors-js-puns').hide()
 const selectJobElement = $('#title')
 selectJobElement.on('change', () => {
     if (selectJobElement.val() === 'other') {
-        otherJobInput.show()
+        otherJobInput.slideDown()
+    } else {
+        otherJobInput.slideUp()
     }
 })
 
@@ -40,6 +42,7 @@ $('#color').children().each((index) => {
 /* Creates alert elements to show if a user makes a mistake or skips a field */
 const nameAlert = $('<p class="alert" id="name-alert">The name field cannot be empty</p>')
 const emailAlert = $('<p class="alert" id="email-alert">Please enter a valid email address</p>')
+const emailAlert2 = $('<p class="alert" id="email-alert">Email address field cannot be empty</p>')
 const activitiesAlert = $('<p class="alert" id="activities-alert">Please select at least one activity from list</p>')
 const cardNumberAlert = $('<p class="alert" id="card-number-alert">Please enter a number that is between 13 and 16 digits long.</p>')
 const cardNumberAlert2 = $('<p class="alert" id="card-number-alert2">Please enter a credit card number.</p>')
@@ -51,6 +54,8 @@ $('label[for="name"]').after(nameAlert)
 nameAlert.hide()
 $('label[for="mail"]').after(emailAlert)
 emailAlert.hide()
+$('label[for="mail"]').after(emailAlert2)
+emailAlert2.hide()
 $('.activities').children().eq(0).before(activitiesAlert)
 activitiesAlert.hide()
 $('label[for="cc-num"]').after(cardNumberAlert)
@@ -218,7 +223,7 @@ const validation = (checkName=true, checkEmail=true, checkCardNumber=true, check
     /* Stores the number of selected checkboxes */
     let checkboxesChecked = checkboxIsChecked()
 
-    /* Displays an alert and changes border of the element depending on the validation result */
+    /* Checks if the user has entered name */
     if (checkName===true) {
         if (preventEmptyRegex.test(name)) {
             validationCompleted += 1
@@ -236,9 +241,15 @@ const validation = (checkName=true, checkEmail=true, checkCardNumber=true, check
             validationCompleted += 1
             $('#mail').css('border', '2px solid #6F9DDC')
             emailAlert.hide()
-        } else {
+            emailAlert2.hide()
+        } else if (preventEmptyRegex.test(email)) {
             $('#mail').css('border', '3px solid red')
             emailAlert.show()
+            emailAlert2.hide()
+        } else {
+            $('#mail').css('border', '3px solid red')
+            emailAlert2.show()
+            emailAlert.hide()
         }
     }
 
