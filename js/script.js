@@ -1,3 +1,9 @@
+/* Interactive registration form
+-Adds customized and conditional behavior and interactivity
+-Validates user input and provides helpful error messages in real-time
+ when the user enters invalid information into the form fields
+*/
+
 
 /* Sets focus on name input by default */
 const nameInput = $('#name')
@@ -48,8 +54,10 @@ emailAlert.hide()
 $('.activities').children().eq(0).before(activitiesAlert)
 activitiesAlert.hide()
 $('label[for="cc-num"]').after(cardNumberAlert)
+cardNumberAlert.css('margin-bottom', '1em')
 cardNumberAlert.hide()
 $('label[for="cc-num"]').after(cardNumberAlert2)
+cardNumberAlert2.css('margin-bottom', '2.15em')
 cardNumberAlert2.hide()
 $('label[for="zip"]').after(cardZipAlert)
 cardZipAlert.hide()
@@ -104,7 +112,6 @@ $('.activities').on('change', (event) => {
     let cost = parseInt($(targetElement).attr('data-cost').replace('$', ''))
     let date = $(targetElement).attr('data-day-and-time')
     let activeCheckbox = $(targetElement)
-    console.log(date)
     if ($(event.target).is(':checked')) {
         totalCost += cost
     } else {
@@ -117,7 +124,6 @@ $('.activities').on('change', (event) => {
     checkboxes.each((index) => {
         let currentElement = checkboxes.eq(index)
         let eventData = currentElement.attr('data-day-and-time')
-        console.log(eventData)
         if (eventData === date) {
             if ($(event.target).is(':checked')) {
                  currentElement.attr('disabled', 'true')
@@ -146,7 +152,6 @@ e.g When the user selects the paypal method, all credit card fields are hidden*/
 const selectPaymentElement = $('#payment')
 selectPaymentElement.on('change', (event) => {
     let inputValue = $(event.target).val()
-    console.log(inputValue)
     if (inputValue === 'Credit Card') {
         creditCardPayment = true
         $('#credit-card').show()
@@ -213,6 +218,7 @@ const validation = (checkName=true, checkEmail=true, checkCardNumber=true, check
     /* Stores the number of selected checkboxes */
     let checkboxesChecked = checkboxIsChecked()
 
+    /* Displays an alert and changes border of the element depending on the validation result */
     if (checkName===true) {
         if (preventEmptyRegex.test(name)) {
             validationCompleted += 1
@@ -224,6 +230,7 @@ const validation = (checkName=true, checkEmail=true, checkCardNumber=true, check
         }
     }
 
+    /* Checks if the user has entered correct email address */
     if (checkEmail === true) {
         if (emailRegex.test(email) && preventEmptyRegex.test(email)) {
             validationCompleted += 1
@@ -291,14 +298,12 @@ const validation = (checkName=true, checkEmail=true, checkCardNumber=true, check
         }
     }
 
-
     /* If all conditions are met successfully, returns true otherwise returns false */
     if (validationCompleted == validationSuccess) {
         isCompleted = true
     }
     return isCompleted
 }
-
 
 $('button[type="submit"]').on('click', (event) => {
     if (!validation()) {
